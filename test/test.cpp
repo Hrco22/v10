@@ -93,7 +93,7 @@ namespace all_tests
 		TEST_METHOD(test_04b)
 		{
 			std::vector<std::string> v{ "V", "S", "I", "T", "E", "!" };
-			auto res = std::accumulate(v.begin(), v.end(), std::string("GO "), std::plus<std::string>());// TODO: concatenated string with additional prefix 
+			auto res = std::accumulate(v.begin(), v.end(), std::string("GO "));// TODO: concatenated string with additional prefix 
 			Assert::AreEqual("GO VSITE!", res.c_str());
 		}
 		TEST_METHOD(test_04c)
@@ -150,8 +150,7 @@ namespace all_tests
 		{
 			std::vector<double> v{ 1e10, 8, -11.23, 0, 1e10, 1e10, 1e10, 0, 99 };
 			// TODO: change every invalid value (1e10) with -1 
-			std::replace(v.begin(), v.end(), 1e10, -1.0);
-
+			std::replace_if(v.begin(), v.end(), [](double x) { return std::abs(x - 1e10) < 1e-9; }, -1.0);
 			Assert::AreEqual(-1., v[0]);
 			Assert::AreEqual(-1., v[4]);
 			Assert::AreEqual(-1., v[6]);
@@ -239,14 +238,8 @@ namespace all_tests
 		{
 			std::vector<int> atp_points{ 8445, 7480, 6220, 5300, 5285 };
 			// the most interesting match is the one with the smallest difference
-			std::vector<int> diff(atp_points.size());
-			std::adjacent_difference(atp_points.begin(), atp_points.end(), diff.begin());
-			auto smallest_difference = *std::min_element(diff.begin() + 1, diff.end(), [](int x, int y) {
-				if (x <= 0) return false;
-				if (y <= 0) return true;
-				return x < y;
-				});
-			// TODO: 
+			
+			auto smallest_difference = abs(*std::max_element(atp_points.begin() + 1, (std::adjacent_difference(atp_points.begin(), atp_points.end(), atp_points.begin()))));// TODO: 
 			Assert::AreEqual(15, smallest_difference);
 		}
 	};
