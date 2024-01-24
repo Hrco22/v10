@@ -150,7 +150,7 @@ namespace all_tests
 		{
 			std::vector<double> v{ 1e10, 8, -11.23, 0, 1e10, 1e10, 1e10, 0, 99 };
 			// TODO: change every invalid value (1e10) with -1 
-			std::replace_if(v.begin(), v.end(), [](double x) { return std::abs(x - 1e10) < 1e-9; }, -1.0);
+			std::replace(v.begin(), v.end(), 1e10, -1.0);
 			Assert::AreEqual(-1., v[0]);
 			Assert::AreEqual(-1., v[4]);
 			Assert::AreEqual(-1., v[6]);
@@ -165,7 +165,8 @@ namespace all_tests
 				}
 				return c;
 				});
-
+			std::replace_if(s.begin(), s.end(), [](char c) {return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u'; }, 'x');
+			
 			Assert::AreEqual("nxxspxrxkx", s.c_str());
 		}
 		TEST_METHOD(test_08a)
